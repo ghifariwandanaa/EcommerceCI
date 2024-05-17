@@ -17,6 +17,10 @@ class CreateBarangTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '150',
             ],
+            'deskripsi_barang' => [
+                'type' => 'VARCHAR',
+                'constraint' => '150',
+            ],
             'harga' => [
                 'type' => 'INT',
                 'constraint' => 10,

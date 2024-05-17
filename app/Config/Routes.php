@@ -6,5 +6,5 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', function () {
+    return view('LandingPage/view_index');
 });
-$routes->get('barang', 'Home::index');
