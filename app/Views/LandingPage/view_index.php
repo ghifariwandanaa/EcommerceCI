@@ -71,7 +71,7 @@
             </div>
 
             <div class="cart-icon">
-                <a href="#">
+                <a href="<?= site_url('cart') ?>">
                     <i class="fa fa-shopping-cart"></i>
                     <span>Cart</span>
                 </a>
@@ -92,8 +92,8 @@
                             <div class="product-description">
                                 <h4 class="product-price">Rp. <?= number_format($item['harga'], 0, ',', '.') ?></h4>
                                 <p><?= $item['nama_barang'] ?></p>
-                                <!-- Add to Cart -->
-                                <a href="#" class="add-to-cart-btn">ADD TO CART</a>
+                                <!-- Add to Cart Form -->
+                                <a href="<?= site_url('cart/add/' . $item['kode_barang']) ?>" class="btn btn-primary">Add to Cart</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
