@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div class="main_header_area">
-               <center><strong>Selamat Checkout</strong></center>
+            <center><strong>Selamat Checkout</strong></center>
             </div>
         </header>
         
@@ -97,7 +97,6 @@
                             </div>
                             <div class="update-checkout w-50 text-right">
                                 <a href="<?= base_url('cart/clear') ?>" class="btn btn-clear-cart">Clear cart</a>
-                              
                             </div>
                         </div>
 
