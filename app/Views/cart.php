@@ -76,7 +76,6 @@
                                         <tr>
                                             <td class="cart_product_img d-flex align-items-center">
                                                 <img src="<?= base_url($item['foto_barang']) ?>" alt="<?= $item['nama_barang'] ?>" class="cart-thumb">
-                                                <h6><?= $item['nama_barang'] ?></h6>
                                             </td>
                                             <td class="price"><span><?= $item['harga'] ?></span></td>
                                             <td class="qty">
@@ -152,7 +151,7 @@
                                 <li><span>Shipping</span> <span>Free</span></li>
                                 <li><span><strong>Total</strong></span> <span><strong id="grand-total"><?= $subtotal ?></strong></span></li>
                             </ul>
-                            <a href="checkout.html" class="btn karl-checkout-btn">Proceed to checkout</a>
+                            <a href="<?= base_url('cart/checkout') ?>" class="btn karl-checkout-btn">Proceed to checkout</a>
                         </div>
                     </div>
                 </div>

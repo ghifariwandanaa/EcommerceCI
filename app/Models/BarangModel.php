@@ -26,4 +26,12 @@ class BarangModel extends Model
     {
         return $this->where('kode_barang', $kode_barang)->first();
     }
+
+    /**
+     * Custom method to update stock of barang
+     */
+    public function updateStock($kode_barang, $newStok)
+    {
+        return $this->where('kode_barang', $kode_barang)->set(['stok' => $newStok])->update();
+    }
 }

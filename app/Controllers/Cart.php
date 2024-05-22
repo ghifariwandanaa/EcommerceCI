@@ -11,6 +11,7 @@ class Cart extends BaseController
     public function __construct()
     {
         $this->session = session();
+        $this->barangModel = new BarangModel();
     }
 
     public function index()
@@ -27,10 +28,10 @@ class Cart extends BaseController
     public function viewCart()
     {
         $cart = $this->session->get('cart') ?? [];
-        $subtotal = array_sum(array_map(function($item) {
+        $subtotal = array_sum(array_map(function ($item) {
             return $item['harga'] * $item['jumlah'];
         }, $cart));
-        
+
         return view('cart', ['items' => $cart, 'subtotal' => $subtotal]);
     }
 
@@ -48,7 +49,7 @@ class Cart extends BaseController
         ];
 
         $cart = $this->session->get('cart') ?? [];
-        
+
         // Check if item is already in cart
         $found = false;
         foreach ($cart as &$cart_item) {
@@ -75,8 +76,8 @@ class Cart extends BaseController
 
         if ($cart && $quantities) {
             foreach ($cart as &$item) {
-                if (isset($quantities[$item['id']])) {
-                    $item['jumlah'] = (int) $quantities[$item['id']];
+                if (isset($quantities[$item['kode_barang']])) {
+                    $item['jumlah'] = (int) $quantities[$item['kode_barang']];
                 }
             }
 
@@ -99,8 +100,35 @@ class Cart extends BaseController
 
     private function calculateSubtotal($items)
     {
-        return array_sum(array_map(function($item) {
+        return array_sum(array_map(function ($item) {
             return $item['harga'] * $item['jumlah'];
         }, $items));
     }
+
+    public function checkout()
+    {
+        $cart = $this->session->get('cart');
+
+        // Lakukan validasi, pastikan keranjang tidak kosong
+        if (!$cart) {
+            // Tampilkan pesan kesalahan atau redirect ke halaman lain
+        }
+
+        // Loop melalui barang-barang dalam keranjang
+        foreach ($cart as $item) {
+            // Dapatkan informasi stok barang dari database
+            $barang = $this->barangModel->find($item['kode_barang']);
+
+            // Perbarui stok barang
+            $newStok = $barang['stok'] - $item['jumlah'];
+            $this->barangModel->updateStock($item['kode_barang'], $newStok);
+        }
+
+        // Setelah mengupdate stok barang, hapus session keranjang
+        $this->session->remove('cart');
+
+        // Redirect ke halaman lain atau tampilkan pesan sukses
+        return redirect()->to('/cart');
+    }
+
 }
