@@ -3,42 +3,41 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\BarangModel;
+use App\Models\JualModel;
+use App\Models\PenjualanModel;
 
 class Cart extends BaseController
 {
+    protected $session;
+    protected $barangModel;
+    protected $penjualanModel;
+    protected $jualModel;
+
     public function __construct()
     {
         $this->session = session();
         $this->barangModel = new BarangModel();
+        $this->penjualanModel = new PenjualanModel();
+        $this->jualModel = new JualModel();
     }
 
     public function index()
     {
-        $session = session();
-        $items = $session->get('cart') ?? [];
-
+        $items = $this->session->get('cart') ?? [];
         $data['items'] = $items;
         $data['subtotal'] = $this->calculateSubtotal($items);
 
         echo view('cart', $data);
     }
 
-    public function viewCart()
-    {
-        $cart = $this->session->get('cart') ?? [];
-        $subtotal = array_sum(array_map(function ($item) {
-            return $item['harga'] * $item['jumlah'];
-        }, $cart));
-
-        return view('cart', ['items' => $cart, 'subtotal' => $subtotal]);
-    }
-
     public function addToCart($id)
     {
-        $model = new BarangModel();
-        $barang = $model->find($id);
+        $barang = $this->barangModel->find($id);
+
+        if (!$barang) {
+            return redirect()->to('/')->with('error', 'Barang tidak ditemukan');
+        }
 
         $item = [
             'kode_barang' => $barang['kode_barang'],
@@ -50,7 +49,6 @@ class Cart extends BaseController
 
         $cart = $this->session->get('cart') ?? [];
 
-        // Check if item is already in cart
         $found = false;
         foreach ($cart as &$cart_item) {
             if ($cart_item['kode_barang'] == $item['kode_barang']) {
@@ -69,6 +67,39 @@ class Cart extends BaseController
         return redirect()->to('/cart');
     }
 
+    public function store()
+    {
+        $cart = $this->session->get('cart');
+
+        if (!$cart) {
+            return redirect()->to('/cart')->with('error', 'Keranjang belanja kosong');
+        }
+
+        // Insert a new transaction in penjualan table
+        $idTransaksi = $this->penjualanModel->insertPenjualan();
+
+        // Insert each item in the cart into the jual table
+        foreach ($cart as $item) {
+            $data = [
+                'kode_barang' => $item['kode_barang'],
+                'id_transaksi' => $idTransaksi,
+                'jumlah' => $item['jumlah'],
+                'harga_jual' => $item['harga']
+            ];
+            $this->jualModel->insert($data);
+        }
+
+        // Store the transaction ID in session for use in the checkout
+        $this->session->set('id_transaksi', $idTransaksi);
+
+        // Clear the cart session
+        $this->session->remove('cart');
+
+        return redirect()->to('/checkout')->with('success', 'Checkout berhasil');
+    }
+
+
+
     public function updateCart()
     {
         $quantities = $this->request->getPost('quantities');
@@ -77,7 +108,7 @@ class Cart extends BaseController
         if ($cart && $quantities) {
             foreach ($cart as &$item) {
                 if (isset($quantities[$item['kode_barang']])) {
-                    $item['jumlah'] = (int) $quantities[$item['kode_barang']];
+                    $item['jumlah'] = (int)$quantities[$item['kode_barang']];
                 }
             }
 
@@ -98,37 +129,34 @@ class Cart extends BaseController
         return redirect()->to('/cart');
     }
 
+    public function checkout()
+    {
+        $cart = $this->session->get('cart');
+
+        if (!$cart) {
+            return redirect()->to('/cart')->with('error', 'Keranjang belanja kosong');
+        }
+
+        foreach ($cart as $item) {
+            $barang = $this->barangModel->find($item['kode_barang']);
+
+            if (!$barang || $barang['stok'] < $item['jumlah']) {
+                return redirect()->to('/cart')->with('error', 'Stok barang tidak mencukupi untuk ' . $barang['nama_barang']);
+            }
+
+            $newStok = $barang['stok'] - $item['jumlah'];
+            $this->barangModel->update($item['kode_barang'], ['stok' => $newStok]);
+        }
+
+        $this->session->remove('cart');
+
+        return redirect()->to('/cart')->with('success', 'Checkout berhasil');
+    }
+
     private function calculateSubtotal($items)
     {
         return array_sum(array_map(function ($item) {
             return $item['harga'] * $item['jumlah'];
         }, $items));
     }
-
-    public function checkout()
-    {
-        $cart = $this->session->get('cart');
-
-        // Lakukan validasi, pastikan keranjang tidak kosong
-        if (!$cart) {
-            // Tampilkan pesan kesalahan atau redirect ke halaman lain
-        }
-
-        // Loop melalui barang-barang dalam keranjang
-        foreach ($cart as $item) {
-            // Dapatkan informasi stok barang dari database
-            $barang = $this->barangModel->find($item['kode_barang']);
-
-            // Perbarui stok barang
-            $newStok = $barang['stok'] - $item['jumlah'];
-            $this->barangModel->updateStock($item['kode_barang'], $newStok);
-        }
-
-        // Setelah mengupdate stok barang, hapus session keranjang
-        $this->session->remove('cart');
-
-        // Redirect ke halaman lain atau tampilkan pesan sukses
-        return redirect()->to('/cart');
-    }
-
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="">
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="<?= base_url('style.css') ?>">
     <link href="<?= base_url('css/responsive.css') ?>" rel="stylesheet">
 </head>
+
 <body>
     <div id="wrapper">
         <header class="header_area bg-img background-overlay-white" style="background-image: url(<?= base_url('img/bg-img/bg-1.jpg') ?>);">
@@ -20,32 +22,13 @@
                         <div class="col-12 col-lg-7">
                             <div class="top_single_area d-flex align-items-center">
                                 <div class="top_logo">
-                                    <a href="#"><img src="<?= base_url('img/core-img/logo.png') ?>" alt=""></a>
+                                    <a href="/"><img src="<?= base_url('img/core-img/logo.png') ?>" alt=""></a>
                                 </div>
                                 <div class="header-cart-menu d-flex align-items-center ml-auto">
                                     <div class="cart">
                                         <a href="<?= base_url('cart') ?>" target="_blank"><span class="cart_quantity"><?= count($items) ?></span> <i class="ti-bag"></i> Your cart</a>
-                                        <ul class="cart-list">
-                                            <?php foreach ($items as $item): ?>
-                                                <li>
-                                                    <a href="#" class="image"><img src="<?= base_url($item['foto_barang']) ?>" class="cart-thumb" alt=""></a>
-                                                    <div class="cart-item-desc">
-                                                        <h6><a href="#"><?= $item['nama_barang'] ?></a></h6>
-                                                        <p><?= $item['jumlah'] ?>x - <span class="price"><?= $item['harga'] ?></span></p>
-                                                    </div>
-                                                    <span class="dropdown-product-remove"><i class="icon-cross"></i></span>
-                                                </li>
-                                            <?php endforeach; ?>
-                                            <li class="total">
-                                                <span class="pull-right">Total: <span id="cart-total"><?= $subtotal ?></span></span>
-                                                <a href="cart.html" class="btn btn-sm btn-cart">Cart</a>
-                                                <a href="checkout-1.html" class="btn btn-sm btn-checkout">Checkout</a>
-                                            </li>
-                                        </ul>
                                     </div>
-                                    <div class="header-right-side-menu ml-15">
-                                        <a href="#" id="sideMenuBtn"><i class="ti-menu" aria-hidden="true"></i></a>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -53,10 +36,10 @@
                 </div>
             </div>
             <div class="main_header_area">
-            <center><strong>Selamat Checkout</strong></center>
+                <center><strong>Selamat Checkout</strong></center>
             </div>
         </header>
-        
+
         <div class="cart_area section_padding_100 clearfix">
             <div class="container">
                 <div class="row">
@@ -65,22 +48,24 @@
                             <table class="table table-responsive">
                                 <thead>
                                     <tr>
-                                        <th>Product</th>
+                                        <th>Picture Product</th>
+                                        <th>Name Product</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
                                         <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($items as $item): ?>
+                                    <?php foreach ($items as $item) : ?>
                                         <tr>
                                             <td class="cart_product_img d-flex align-items-center">
-                                                <img src="<?= base_url($item['foto_barang']) ?>" alt="<?= $item['nama_barang'] ?>" class="cart-thumb">
+                                                <img src="<?= base_url('/img/product-img/' . $item['foto_barang']) ?>" width="100px" alt="<?= $item['nama_barang'] ?>" class="cart-thumb">
                                             </td>
+                                            <td><span><?= $item['nama_barang'] ?></span></td>
                                             <td class="price"><span><?= $item['harga'] ?></span></td>
                                             <td class="qty">
                                                 <div class="quantity">
-                                                <?= $item['jumlah'] ?>
+                                                    <?= $item['jumlah'] ?>
                                                 </div>
                                             </td>
                                             <td class="total_price"><span class="item-total"><?= $item['harga'] * $item['jumlah'] ?></span></td>
@@ -104,39 +89,10 @@
 
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4">
-                        <div class="coupon-code-area mt-70">
-                            <div class="cart-page-heading">
-                                <h5>Coupon code</h5>
-                                <p>Enter your coupon code</p>
-                            </div>
-                            <form action="#">
-                                <input type="search" name="search" placeholder="#569ab15">
-                                <button type="submit">Apply</button>
-                            </form>
-                        </div>
+
                     </div>
                     <div class="col-12 col-md-6 col-lg-4">
-                        <div class="shipping-method-area mt-70">
-                            <div class="cart-page-heading">
-                                <h5>Shipping method</h5>
-                                <p>Select the one you want</p>
-                            </div>
 
-                            <div class="custom-control custom-radio mb-30">
-                                <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
-                                <label class="custom-control-label d-flex align-items-center justify-content-between" for="customRadio1"><span>Next day delivery</span><span>$4.99</span></label>
-                            </div>
-
-                            <div class="custom-control custom-radio mb-30">
-                                <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
-                                <label class="custom-control-label d-flex align-items-center justify-content-between" for="customRadio2"><span>Standard delivery</span><span>$1.99</span></label>
-                            </div>
-
-                            <div class="custom-control custom-radio">
-                                <input type="radio" id="customRadio3" name="customRadio" class="custom-control-input">
-                                <label class="custom-control-label d-flex align-items-center justify-content-between" for="customRadio3"><span>Personal Pickup</span><span>Free</span></label>
-                            </div>
-                        </div>
                     </div>
                     <div class="col-12 col-lg-4">
                         <div class="cart-total-area mt-70">
@@ -150,7 +106,7 @@
                                 <li><span>Shipping</span> <span>Free</span></li>
                                 <li><span><strong>Total</strong></span> <span><strong id="grand-total"><?= $subtotal ?></strong></span></li>
                             </ul>
-                            <a href="<?= base_url('cart/checkout') ?>" class="btn karl-checkout-btn">Proceed to checkout</a>
+                            <a href="<?= base_url('cart/store') ?>" class="btn btn-outline-dark karl-checkout-btn">Proceed to checkout</a>
                         </div>
                     </div>
                 </div>
@@ -200,5 +156,5 @@
         });
     </script>
 </body>
-</html>
 
+</html>
