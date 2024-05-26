@@ -36,13 +36,13 @@ class CheckoutController extends BaseController
     {
         // Ambil data dari form
         $idTransaksi = $this->request->getPost('id_transaksi');
-        $namaPelanggan = $this->request->getPost('nama_pelanggan');
+        $namaPembeli = $this->request->getPost('nama_pembeli');
         $noHP = $this->request->getPost('no_hp');
         $alamat = $this->request->getPost('alamat');
 
         // Perbarui tabel penjualan dengan informasi pembeli
         $dataPenjualan = [
-            'nama_pelanggan' => $namaPelanggan,
+            'nama_pembeli' => $namaPembeli,
             'no_hp' => $noHP,
             'alamat' => $alamat
         ];

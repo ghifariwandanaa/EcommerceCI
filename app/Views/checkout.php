@@ -48,7 +48,7 @@
 
                             <div class="mb-3">
                                 <label for="nama_pelanggan" class="form-label">Nama Pelanggan:</label>
-                                <input type="text" id="nama_pelanggan" class="form-control" name="nama_pelanggan" required>
+                                <input type="text" id="nama_pelanggan" class="form-control" name="nama_pembeli" required>
                             </div>
                             <div class="mb-3">
                                 <label for="no_hp" class="form-label">No Handphone:</label>
